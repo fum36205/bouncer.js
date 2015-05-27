@@ -17,7 +17,7 @@ bouncer.js uses a `canvas` element to draw the current map and state. A referenc
 ```javascript
 var canvas = document.querySelector("#id");
 var bouncer = new Bouncer(canvas);
-ouncer.start();
+bouncer.start();
 ```
 
 
