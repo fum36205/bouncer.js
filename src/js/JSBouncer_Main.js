@@ -6,13 +6,16 @@
     var NewBouncer = function (canvas) {
 
         var map = new BouncerLibrary.Map(canvas);
+        map.draw();
 
-        function start() {
-            map.draw();
+        function loadTask(url) {
+            BouncerLibrary.get(url, function (data) {
+                map.load(data.map);
+            });
         }
 
         return {
-            start: start
+            loadTask: loadTask
         };
     };
 

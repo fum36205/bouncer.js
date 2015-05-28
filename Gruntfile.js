@@ -25,12 +25,12 @@
                     separator: grunt.util.linefeed
                 },
                 dist: {
-                    src: ["src/js/JSBouncer_Map.js", "src/js/JSBouncer_Main.js"],
+                    src: ["src/js/JSBouncer_Utilities.js", "src/js/JSBouncer_Map.js", "src/js/JSBouncer_Main.js"],
                     dest: "dist/bouncer.js"
                 }
             },
             uglify: {
-                my_target: {
+                target: {
                     files: {
                         "dist/bouncer.min.js": "dist/bouncer.js"
                     }
