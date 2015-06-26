@@ -4,25 +4,40 @@
     border-style: solid;
     border-width: 2px;
     border-color: rgba(30, 30, 30, 1);
-    background-color: rgba(240, 240, 240, 1);
+    background-color: rgba(220, 220, 220, 1);
+}
+
+.bouncer-player.body.color {
+    display: none;
+    background-color: rgba(250, 250, 100, 1);
+}
+
+.bouncer-player.eye.color {
+    display: none;
+    background-color: rgba(50, 50, 50, 1);
 }
 
 .bouncer-grid.color {
     display: none;
-    border-color: rgb(30, 30, 30);
+    border-color: rgba(30, 30, 30, 1);
 }
 
-.bouncer-grid.colors.red {
+.bouncer-grid.fields.obstacle {
+    display: none;
+    background-color: rgba(30, 30, 30, 1);
+}
+
+.bouncer-grid.fields.colors.red {
     display: none;
     background-color: rgba(220, 20, 20, 0.5);
 }
 
-.bouncer-grid.colors.green {
+.bouncer-grid.fields.colors.green {
     display: none;
     background-color: rgba(20, 220, 20, 0.5);
 }
 
-.bouncer-grid.colors.blue {
+.bouncer-grid.fields.colors.blue {
     display: none;
     background-color: rgba(20, 20, 220, 0.5);
 }

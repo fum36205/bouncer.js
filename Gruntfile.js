@@ -25,7 +25,7 @@
                     separator: grunt.util.linefeed
                 },
                 dist: {
-                    src: ["src/js/JSBouncer_Utilities.js", "src/js/JSBouncer_Map.js", "src/js/JSBouncer_Main.js"],
+                    src: ["src/js/JSBouncer_Utilities.js", "src/js/JSBouncer_Enums.js", "src/js/JSBouncer_Prototypes.js", "src/js/JSBouncer_Connector.js", "src/js/JSBouncer_Map.js", "src/js/JSBouncer_Bouncer.js", "src/js/JSBouncer_Context.js", "src/js/JSBouncer_Main.js"],
                     dest: "dist/bouncer.js"
                 }
             },
@@ -49,18 +49,26 @@
             },
             copy: {
                 main: {
-                    files: [
-                        {
-                            src: ["dist/bouncer.min.js"],
-                            dest: "demo/js/libs/bouncer.min.js",
-                            filter: "isFile"
-                        },
-                        {
-                            src: ["dist/bouncer.min.css"],
-                            dest: "demo/res/css/bouncer.min.css",
-                            filter: "isFile"
-                        }
-                    ]
+                    files: [{
+                        src: ["dist/bouncer.min.js"],
+                        dest: "demo/js/libs/bouncer/bouncer.min.js",
+                        filter: "isFile"
+                    }, {
+                        src: ["dist/bouncer.min.css"],
+                        dest: "demo/js/libs/bouncer/bouncer.min.css",
+                        filter: "isFile"
+                    }]
+                },
+                dev: {
+                    files: [{
+                        src: ["dist/bouncer.js"],
+                        dest: "demo/js/libs/bouncer/bouncer.min.js",
+                        filter: "isFile"
+                    }, {
+                        src: ["dist/bouncer.min.css"],
+                        dest: "demo/js/libs/bouncer/bouncer.min.css",
+                        filter: "isFile"
+                    }]
                 }
             }
         });
@@ -74,6 +82,8 @@
         grunt.loadNpmTasks("grunt-contrib-copy");
         // tasks
         grunt.registerTask("default", ["eslint", "clean", "yuidoc", "concat", "uglify", "cssmin"]);
+        grunt.registerTask("dev", ["eslint", "clean", "yuidoc", "concat", "cssmin"]);
         grunt.registerTask("demo", ["default", "copy"]);
+        grunt.registerTask("dev-demo", ["dev", "copy:dev"]);
     };
 }());

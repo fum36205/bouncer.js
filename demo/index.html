@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bouncer</title>
+    <link rel="stylesheet" href="js/libs/jquery-terminal/jquery-terminal..css">
+    <link rel="stylesheet" href="js/libs/bouncer/bouncer.min.css">
+    <link rel="stylesheet" href="res/css/styles.css">
+</head>
+
+<body>
+
+    <header>Bouncer-REPL</header>
+    <content>
+        <div id="wrapper">
+        <div id="repl-container" class="box">
+        <div id="repl-header"></div>
+        <div id="repl-terminal"></div>
+        </div>
+        <canvas id="map" class="box"></canvas>
+        </div>
+    </content>
+
+    <script src="js/libs/jquery/jquery-2.1.4.js"></script>
+    <script src="js/libs/jquery/jquery.mousewheel.js"></script>
+    <script src="js/libs/jquery-terminal/jquery.terminal-0.8.8.js"></script>
+    <script src="js/libs/bouncer/bouncer.min.js"></script>
+    <script src="js/src/Bouncer.js"></script>
+
+
+
+    <script>
+        App.Bouncer.init();
+    </script>
+
+</body>
+
+</html>

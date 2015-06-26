@@ -1,0 +1,57 @@
+{
+    "title": "Demo 1",
+    "map": {
+        "width": 12,
+        "height": 12,
+        "bouncer": {
+            "x": 0,
+            "y": 0,
+            "orientation": "EAST"
+        },
+        "fields": [{
+            "x": 0,
+            "y": 0,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 1,
+            "y": 0,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 2,
+            "y": 0,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 3,
+            "y": 0,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 3,
+            "y": 1,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 3,
+            "y": 2,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 3,
+            "y": 3,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 4,
+            "y": 3,
+            "type": "COLOR",
+            "value": "red"
+        }, {
+            "x": 0,
+            "y": 1,
+            "type": "OBSTACLE"
+        }]
+    }
+}
