@@ -24,7 +24,8 @@
     window.BouncerLibrary.Enums.Commands = Object.freeze({
         MOVE: 0,
         TURN: 1,
-        CHECK_FRONT: 2
+        CHECK_FRONT: 2,
+        SET_FIELD: 3
     });
 
 }(window));

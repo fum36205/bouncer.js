@@ -126,36 +126,40 @@
             } else {
                 result = new Boolean(false);
                 result.msg = {
-                    type: "colorRequest",
+                    type: "checkFront",
                     result: "front is blocked"
                 };
             }
             if (log.use === true) {
                 log.push(result);
             }
-            return result;
+            return result.valueOf();
         }
 
-        function hasCurrentFieldColor(color) {
+        function getCurrentFieldColor() {
             var targetField, result;
             targetField = map.getFieldInfo(position.x, position.y);
-            if (targetField.type === BouncerLibrary.Enums.FieldType.COLOR && targetField.value === color) {
-                result = new Boolean(true);
+            if (targetField.type === BouncerLibrary.Enums.FieldType.COLOR) {
+                result = new String(targetField.value);
                 result.msg = {
                     type: "colorRequest",
-                    result: "current field is " + color
+                    result: "current field is " + targetField.value
                 };
             } else {
-                result = new Boolean(false);
+                result = new String("undefined");
                 result.msg = {
                     type: "colorRequest",
-                    result: "current field is not " + color
+                    result: "current field has no color"
                 };
             }
             if (log.use === true) {
                 log.push(result);
             }
-            return result;
+            return result.valueOf();
+        }
+
+        function setCurrentFieldColor(color) {
+            map.setFieldInfo(position.x, position.y, BouncerLibrary.Enums.FieldType.COLOR, color);
         }
 
         function move() {
@@ -186,7 +190,7 @@
             if (log.use === true) {
                 log.push(result);
             }
-            return result;
+            return result.valueOf();
         }
 
         function turnLeft() {
@@ -206,7 +210,7 @@
             if (log.use === true) {
                 log.push(result);
             }
-            return result;
+            return result.valueOf();
         }
 
         function startLogging() {
@@ -229,7 +233,8 @@
         that.move = move;
         that.turnLeft = turnLeft;
         that.isFrontClear = isFrontClear;
-        that.hasCurrentFieldColor = hasCurrentFieldColor;
+        that.getCurrentFieldColor = getCurrentFieldColor;
+        that.setCurrentFieldColor = setCurrentFieldColor;
         that.setState = setState;
         that.setMap = setMap;
         that.startLogging = startLogging;

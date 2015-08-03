@@ -99,13 +99,14 @@ content {
 }
 
 #repl-terminal {
-    width: 98.9%;
+    width: 98.7%;
     height: 100%;
     color: rgb(255,255,255);
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
-#repl-terminal::-webkit-scrollbar{width: 0.4%;}
+#repl-terminal::-webkit-scrollbar{width: 0.5%;}
 #repl-terminal::-webkit-scrollbar-thumb{background-color:rgb(200,200,200); border-radius: 0;}
 #repl-terminal::-webkit-scrollbar-thumb:hover{background-color:rgb(255,255,255);}
 #repl-terminal::-webkit-scrollbar-track{background-color:rgb(60,60,60);}

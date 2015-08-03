@@ -14,10 +14,6 @@ App.Bouncer = (function () {
 
     function onTerminalInput(command, term) {
         var result = context.run(command, DELAY);
-        console.log(result);
-        if (result.type !== "stack") {
-            term.echo(result);
-        }
     }
 
     function initBouncer() {
@@ -34,7 +30,7 @@ App.Bouncer = (function () {
             prompt: "> ",
             greetings: "",
             focus: true,
-            completion: ["bouncer", "bouncer.turnLeft()", "bouncer.move()", "bouncer.isFrontClear()", "bouncer.hasCurrentFieldColor(String color)"],
+            completion: ["bouncer", "bouncer.turnLeft()", "bouncer.move()", "bouncer.isFrontClear()", "bouncer.getCurrentFieldColor()", "bouncer.setCurrentFieldColor(String color"],
             onInit: function (term) {
                 terminal = term;
             }

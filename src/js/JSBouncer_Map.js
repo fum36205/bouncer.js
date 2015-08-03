@@ -12,7 +12,6 @@
             context,
             options,
             bouncer,
-            fields,
             fieldMapping,
             commandStack;
 
@@ -90,16 +89,29 @@
         }
 
         function drawFields() {
-            fields.forEach(function (item) {
-                switch (item.type) {
-                case BouncerLibrary.Enums.FieldType.COLOR:
-                    drawColoredField(item.x, item.y, item.value);
-                    break;
-                case BouncerLibrary.Enums.FieldType.OBSTACLE:
-                    drawObstacle(item.x, item.y);
-                    break;
+            var x, y, field;
+            for (x = 0; x < options.gridWidth; x++) {
+                for (y = 0; y < options.gridHeight; y++) {
+                    field = fieldMapping[x][y];
+                    if (field === undefined) {
+                        continue;
+                    }
+                    switch (field.type) {
+                    case BouncerLibrary.Enums.FieldType.COLOR:
+                        if (field.drawState !== undefined) {
+                            if (field.drawState.type === BouncerLibrary.Enums.FieldType.COLOR) {
+                                drawColoredField(field.drawState.x, field.drawState.y, field.drawState.value);
+                            }
+                        } else {
+                            drawColoredField(field.x, field.y, field.value);
+                        }
+                        break;
+                    case BouncerLibrary.Enums.FieldType.OBSTACLE:
+                        drawObstacle(field.x, field.y);
+                        break;
+                    }
                 }
-            });
+            }
         }
 
         function drawGrid() {
@@ -134,29 +146,58 @@
         }
 
         function getField(x, y) {
-            var field;
-
             if (x < 0 || y < 0 || x >= options.gridWidth || y >= options.gridHeight) {
                 return undefined;
             }
-
-            field = fieldMapping[x][y];
-            if (field === undefined) {
-                field = {
-                    x: x,
-                    y: y,
-                    type: BouncerLibrary.Enums.FieldType.EMPTY
-                };
-            }
-            return field;
+            return fieldMapping[x][y];
         }
 
         function setField(x, y, type, value) {
+            var field, newField;
             if (x < 0 || y < 0 || x >= options.gridWidth || y >= options.gridHeight) {
                 return false;
             }
-            fieldMapping[x][y].type = type;
-            fieldMapping[x][y].value = value;
+
+
+            newField = {
+                type: BouncerLibrary.Enums.FieldType.COLOR,
+                x: x,
+                y: y,
+                value: value
+            };
+
+
+            field = fieldMapping[x][y];
+
+            if (field === undefined) {
+                newField.drawState = {
+                    type: BouncerLibrary.Enums.FieldType.EMPTY,
+                    x: x,
+                    y: y
+                };
+            } else {
+                newField.drawState = {
+                    type: field.type,
+                    x: x,
+                    y: y,
+                    value: field.value
+                };
+            }
+
+            fieldMapping[x][y] = newField;
+
+            if (commandStack.use === true) {
+                commandStack.push({
+                    type: BouncerLibrary.Enums.Commands.SET_FIELD,
+                    x: x,
+                    y: y,
+                    newType: type,
+                    newValue: value
+                });
+            } else {
+                fieldMapping[x][y].drawState = undefined;
+                draw();
+            }
         }
 
         function onBouncerMoved(newState) {
@@ -194,13 +235,7 @@
         }
 
         function init() {
-            fields = [];
             commandStack = [];
-            bouncer = {
-                x: 0,
-                y: 0,
-                orientation: "EAST"
-            };
             canvas.classList.add("bouncer-canvas");
             canvas.setAttribute("width", canvas.offsetWidth);
             canvas.setAttribute("height", canvas.offsetHeight);
@@ -221,14 +256,20 @@
             BouncerLibrary.get(url, function (map) {
                 var newOptions = {};
                 map = map.map;
-                bouncer = map.bouncer || bouncer;
+                bouncer = map.bouncer;
                 bouncer.orientation = BouncerLibrary.Enums.Orientation[bouncer.orientation];
-                fields = map.fields || fields;
                 fieldMapping = [];
-                for (var i = 0; i < map.width; i++) {
-                    fieldMapping[i] = [];
+                for (var x = 0; x < options.gridWidth; x++) {
+                    fieldMapping[x] = [];
+                    for (var y = 0; y < options.gridHeight; y++) {
+                        fieldMapping[x][y] = {
+                            type: BouncerLibrary.Enums.FieldType.EMPTY,
+                            x: x,
+                            y: y
+                        };
+                    }
                 }
-                fields.forEach(function (field) {
+                map.fields.forEach(function (field) {
                     field.type = BouncerLibrary.Enums.FieldType[field.type];
                     fieldMapping[field.x][field.y] = field;
                 });
@@ -269,7 +310,7 @@
         }
 
         function runCommandStack(delay) {
-            commandStack.inUse = false;
+            commandStack.use = false;
             commandStack.forEach(function (command, index) {
                 switch (command.type) {
                 case BouncerLibrary.Enums.Commands.MOVE:
@@ -278,6 +319,12 @@
                         bouncer.x = command.x;
                         bouncer.y = command.y;
                         bouncer.orientation = command.orientation;
+                        draw();
+                    }, delay * index);
+                    break;
+                case BouncerLibrary.Enums.Commands.SET_FIELD:
+                    setTimeout(function () {
+                        setField(command.x, command.y, command.newType, command.newValue);
                         draw();
                     }, delay * index);
                     break;
