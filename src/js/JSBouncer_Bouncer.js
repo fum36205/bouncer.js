@@ -2,6 +2,7 @@
     "use strict";
     /* eslint-env browser */
     /* global BouncerLibrary */
+    /*eslint no-new-wrappers:0 */
 
     if (typeof (BouncerLibrary) === "undefined") {
         window.BouncerLibrary = {};
@@ -16,7 +17,8 @@
                 y: 0
             },
             orientation = BouncerLibrary.Enums.Orientation.EAST,
-            map;
+            map,
+            log = [];
 
         function addEventListener(event, listener) {
             if (event instanceof Array) {
@@ -111,19 +113,53 @@
         }
 
         function isFrontClear() {
-            var targetField;
+            var targetField, result;
 
             targetField = getNextField();
 
             if (targetField !== undefined && targetField.type !== BouncerLibrary.Enums.FieldType.OBSTACLE) {
-                return true;
+                result = new Boolean(true);
+                result.msg = {
+                    type: "checkFront",
+                    result: "front is clear"
+                };
             } else {
-                return false;
+                result = new Boolean(false);
+                result.msg = {
+                    type: "colorRequest",
+                    result: "front is blocked"
+                };
             }
+            if (log.use === true) {
+                log.push(result);
+            }
+            return result;
+        }
+
+        function hasCurrentFieldColor(color) {
+            var targetField, result;
+            targetField = map.getFieldInfo(position.x, position.y);
+            if (targetField.type === BouncerLibrary.Enums.FieldType.COLOR && targetField.value === color) {
+                result = new Boolean(true);
+                result.msg = {
+                    type: "colorRequest",
+                    result: "current field is " + color
+                };
+            } else {
+                result = new Boolean(false);
+                result.msg = {
+                    type: "colorRequest",
+                    result: "current field is not " + color
+                };
+            }
+            if (log.use === true) {
+                log.push(result);
+            }
+            return result;
         }
 
         function move() {
-            var targetField;
+            var targetField, result;
 
             targetField = getNextField();
 
@@ -131,34 +167,61 @@
                 position.x = targetField.x;
                 position.y = targetField.y;
                 notifyAll("move", getState());
-                return {
-                    "result": "bouncer moved to (" + position.x + "," + position.y + ")"
+                result = new Boolean(true);
+                result.msg = {
+                    type: "step",
+                    result: "bouncer moved to (" + position.x + "," + position.y + ")"
                 };
             } else {
                 notifyAll("crash", {
                     currentState: getState(),
                     targetField: targetField
                 });
-                return {
-                    "type": "step",
-                    "result": "bouncer crashed while moving"
+                result = new Boolean(false);
+                result.msg = {
+                    type: "step",
+                    result: "bouncer crashed while moving"
                 };
             }
+            if (log.use === true) {
+                log.push(result);
+            }
+            return result;
         }
 
         function turnLeft() {
-
+            var result;
             if (orientation > 0) {
                 orientation--;
             } else {
                 orientation = BouncerLibrary.Enums.Orientation.WEST;
             }
-
             notifyAll("turn", getState());
-            return {
+
+            result = new Boolean(true);
+            result.msg = {
                 "type": "step",
                 "result": "bouncer turned, now facing " + Object.keys(BouncerLibrary.Enums.Orientation)[orientation]
             };
+            if (log.use === true) {
+                log.push(result);
+            }
+            return result;
+        }
+
+        function startLogging() {
+            log.use = true;
+            log.startIndex = log.length;
+        }
+
+        function stopLogging() {
+            log.use = false;
+            log.stopIndex = log.length;
+        }
+
+        function getLog() {
+            var currentLog = log.slice(log.startIndex, log.stopIndex);
+            return currentLog;
         }
 
         that.addEventListener = addEventListener;
@@ -166,8 +229,12 @@
         that.move = move;
         that.turnLeft = turnLeft;
         that.isFrontClear = isFrontClear;
+        that.hasCurrentFieldColor = hasCurrentFieldColor;
         that.setState = setState;
         that.setMap = setMap;
+        that.startLogging = startLogging;
+        that.stopLogging = stopLogging;
+        that.getLog = getLog;
         return that;
     };
 

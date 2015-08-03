@@ -14,7 +14,7 @@ App.Bouncer = (function () {
 
     function onTerminalInput(command, term) {
         var result = context.run(command, DELAY);
-        result = JSON.parse(result);
+        console.log(result);
         if (result.type !== "stack") {
             term.echo(result);
         }
@@ -34,7 +34,7 @@ App.Bouncer = (function () {
             prompt: "> ",
             greetings: "",
             focus: true,
-            completion: ["bouncer", "bouncer.turnLeft()", "bouncer.move()", "bouncer.isFrontClear"],
+            completion: ["bouncer", "bouncer.turnLeft()", "bouncer.move()", "bouncer.isFrontClear()", "bouncer.hasCurrentFieldColor(String color)"],
             onInit: function (term) {
                 terminal = term;
             }

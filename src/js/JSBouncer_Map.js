@@ -151,6 +151,14 @@
             return field;
         }
 
+        function setField(x, y, type, value) {
+            if (x < 0 || y < 0 || x >= options.gridWidth || y >= options.gridHeight) {
+                return false;
+            }
+            fieldMapping[x][y].type = type;
+            fieldMapping[x][y].value = value;
+        }
+
         function onBouncerMoved(newState) {
             bouncer.x = newState.x;
             bouncer.y = newState.y;
@@ -244,7 +252,8 @@
 
         function getMapProxy() {
             return {
-                getFieldInfo: getField
+                getFieldInfo: getField,
+                setFieldInfo: setField
             };
         }
 

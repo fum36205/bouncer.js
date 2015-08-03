@@ -15,13 +15,21 @@
             var result;
             if (delay) {
                 map.createCommandStack();
+                bouncer.startLogging();
                 window.eval(code);
-                result = map.runCommandStack(delay);
-                return JSON.stringify(result);
+                map.runCommandStack(delay);
+                bouncer.stopLogging();
+                result = bouncer.getLog();
+                for (var i = 0; i < result.length; i++) {
+                    if (Boolean.prototype.isPrototypeOf(result[i])) {
+                        result[i] = result[i].msg;
+                    }
+                }
+                result.type = "stack";
             } else {
                 result = window.eval(code);
-                return JSON.stringify(result);
             }
+            return result;
         }
 
         function loadMapData(mapUrl, callback) {
