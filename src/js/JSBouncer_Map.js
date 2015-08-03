@@ -13,7 +13,8 @@
             options,
             bouncer,
             fields,
-            fieldMapping;
+            fieldMapping,
+            commandStack;
 
         function drawBouncer() {
             var fieldWidth = canvas.getAttribute("width") / options.gridWidth,
@@ -154,18 +155,39 @@
             bouncer.x = newState.x;
             bouncer.y = newState.y;
             bouncer.orientation = newState.orientation;
-            draw();
+
+            if (commandStack.use === true) {
+                commandStack.push({
+                    type: BouncerLibrary.Enums.Commands.MOVE,
+                    x: newState.x,
+                    y: newState.y,
+                    orientation: newState.orientation
+                });
+            } else {
+                draw();
+            }
         }
 
         function onBouncerTurned(newState) {
             bouncer.x = newState.x;
             bouncer.y = newState.y;
             bouncer.orientation = newState.orientation;
-            draw();
+
+            if (commandStack.use === true) {
+                commandStack.push({
+                    type: BouncerLibrary.Enums.Commands.TURN,
+                    x: newState.x,
+                    y: newState.y,
+                    orientation: newState.orientation
+                });
+            } else {
+                draw();
+            }
         }
 
         function init() {
             fields = [];
+            commandStack = [];
             bouncer = {
                 x: 0,
                 y: 0,
@@ -226,6 +248,45 @@
             };
         }
 
+        function createCommandStack() {
+            /* eslint-disable */
+            console.log("create command stack");
+            /* eslint-enable */
+            commandStack = [];
+            commandStack.use = true;
+            commandStack.push({
+                type: BouncerLibrary.Enums.Commands.MOVE,
+                x: bouncer.x,
+                y: bouncer.y,
+                orientation: bouncer.orientation
+            });
+        }
+
+        function runCommandStack(delay) {
+            /* eslint-disable */
+            console.log("running command stack");
+            /* eslint-enable */
+            commandStack.inUse = false;
+            commandStack.forEach(function (command, index) {
+                switch (command.type) {
+                case BouncerLibrary.Enums.Commands.MOVE:
+                case BouncerLibrary.Enums.Commands.TURN:
+                    setTimeout(function () {
+                        bouncer.x = command.x;
+                        bouncer.y = command.y;
+                        bouncer.orientation = command.orientation;
+                        draw();
+                    }, delay * index);
+                    break;
+                }
+            });
+
+            return {
+                type: "stack",
+                result: "processing command stack"
+            };
+        }
+
         setOptions(mapOptions);
         init();
 
@@ -235,6 +296,8 @@
         that.getMapProxy = getMapProxy;
         that.getBouncerState = getBouncerState;
         that.setOptions = setOptions;
+        that.createCommandStack = createCommandStack;
+        that.runCommandStack = runCommandStack;
         that.load = load;
         return that;
     };

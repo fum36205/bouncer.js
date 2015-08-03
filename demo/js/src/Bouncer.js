@@ -13,8 +13,11 @@ App.Bouncer = (function () {
     }
 
     function onTerminalInput(command, term) {
-        var result = context.run(command);
-        term.echo(result);
+        var result = context.run(command, DELAY);
+        result = JSON.parse(result);
+        if (result.type !== "stack") {
+            term.echo(result);
+        }
     }
 
     function initBouncer() {

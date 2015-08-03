@@ -14,9 +14,9 @@
         function run(code, delay) {
             var result;
             if (delay) {
-                bouncer.createCommandStack();
+                map.createCommandStack();
                 window.eval(code);
-                result = bouncer.runCommandStack(delay);
+                result = map.runCommandStack(delay);
                 return JSON.stringify(result);
             } else {
                 result = window.eval(code);

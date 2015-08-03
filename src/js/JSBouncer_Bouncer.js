@@ -16,8 +16,7 @@
                 y: 0
             },
             orientation = BouncerLibrary.Enums.Orientation.EAST,
-            map,
-            commandStack = [];
+            map;
 
         function addEventListener(event, listener) {
             if (event instanceof Array) {
@@ -126,11 +125,6 @@
         function move() {
             var targetField;
 
-            if (commandStack.inUse) {
-                commandStack.push(BouncerLibrary.Enums.Commands.MOVE);
-                return {};
-            }
-
             targetField = getNextField();
 
             if (targetField !== undefined && targetField.type !== BouncerLibrary.Enums.FieldType.OBSTACLE) {
@@ -153,10 +147,6 @@
         }
 
         function turnLeft() {
-            if (commandStack.inUse) {
-                commandStack.push(BouncerLibrary.Enums.Commands.TURN);
-                return {};
-            }
 
             if (orientation > 0) {
                 orientation--;
@@ -171,33 +161,6 @@
             };
         }
 
-        function runCommandStack(delay) {
-            commandStack.inUse = false;
-            commandStack.forEach(function (command, index) {
-                switch (command) {
-                case BouncerLibrary.Enums.Commands.MOVE:
-                    setTimeout(move, delay * index);
-                    break;
-                case BouncerLibrary.Enums.Commands.TURN:
-                    setTimeout(turnLeft, delay * index);
-                    break;
-                case BouncerLibrary.Enums.Commands.CHECK_FRONT:
-                    setTimeout(isFrontClear, delay * index);
-                    break;
-                }
-            });
-            commandStack = [];
-            return {
-                "type": "stack",
-                "result": "running command stack"
-            };
-        }
-
-        function createCommandStack() {
-            commandStack = [];
-            commandStack.inUse = true;
-        }
-
         that.addEventListener = addEventListener;
         that.removeEventListener = removeEventListener;
         that.move = move;
@@ -205,8 +168,6 @@
         that.isFrontClear = isFrontClear;
         that.setState = setState;
         that.setMap = setMap;
-        that.createCommandStack = createCommandStack;
-        that.runCommandStack = runCommandStack;
         return that;
     };
 
