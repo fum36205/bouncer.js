@@ -249,9 +249,6 @@
         }
 
         function createCommandStack() {
-            /* eslint-disable */
-            console.log("create command stack");
-            /* eslint-enable */
             commandStack = [];
             commandStack.use = true;
             commandStack.push({
@@ -263,9 +260,6 @@
         }
 
         function runCommandStack(delay) {
-            /* eslint-disable */
-            console.log("running command stack");
-            /* eslint-enable */
             commandStack.inUse = false;
             commandStack.forEach(function (command, index) {
                 switch (command.type) {

@@ -29,6 +29,7 @@ App.Bouncer = (function () {
     }
 
     function initTerminal() {
+        var contentHeight = $("content").height();
         $("#repl-terminal").terminal(onTerminalInput, {
             prompt: "> ",
             greetings: "",
@@ -38,6 +39,7 @@ App.Bouncer = (function () {
                 terminal = term;
             }
         });
+        $("#repl-container").height(contentHeight * 0.9);
     }
 
     function init() {
